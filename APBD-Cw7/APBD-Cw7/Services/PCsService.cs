@@ -30,7 +30,8 @@ public class PCsService : IPCsService
             ))
             .ToListAsync();
     }
-
+    
+    //by id
     public async Task<IEnumerable<PCComponentsResponse>> GetComponentsAsync(int id)
     {
         var pc = await _context.PCs
@@ -41,12 +42,13 @@ public class PCsService : IPCsService
         if (pc == null)
             return null;
 
-        return pc.PCComponents.Select(x => new PCComponentsResponse( 
+        return pc.PCComponents?.Select(x => new PCComponentsResponse( 
         
             x.Component.Code,
             x.Component.Name,
             x.Amount
-        ));
+        ))
+        ?? Enumerable.Empty<PCComponentsResponse>(); //żeby nie był błąd
     }
 
     public async Task<PCResponse> CreateAsync(PCCreateRequest dto)
